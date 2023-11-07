@@ -13,6 +13,8 @@ const productos = [
     new Producto("tambor", 1799.99)
 ];
 
+const IVA = 1.21
+
 const carrito = [];
 
 alert("Bienvenido a la tienda de instrumentos. Comencemos con su compra. \n A continuacion nuestros productos:");
@@ -55,9 +57,14 @@ if (carrito.length === 0) {
 } else {
     carrito.sort((a, b) => a.producto.precio - b.producto.precio);
 
-    const precioFinal = carrito.reduce((total, item) => total + Math.ceil(item.producto.precio * item.cantidad), 0);
+    let precioFinal = carrito.reduce((total, item) => total + Math.ceil(item.producto.precio * item.cantidad), 0);
 
     let metodoPago = prompt("Ingrese el método de pago (Efectivo, Tarjeta):").toLowerCase();
+
+    if (metodoPago == "tarjeta") {
+        precioFinal *= IVA
+        alert("Se agrega 21% de costo por IVA")
+    }
 
     const productosEnCarrito = carrito.map((item) => `${item.cantidad} ${item.producto.nombre}(s) - Precio unitario: $${item.producto.precio} - Subtotal: $${item.producto.precio * item.cantidad}`);
     alert(`Productos en el carrito:\n${productosEnCarrito.join('\n')}`);
