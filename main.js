@@ -108,7 +108,7 @@ function realizarCompra() {
                 alert("Método de pago no válido. Por favor, ingrese 'Efectivo' o 'Tarjeta'.");
             }
         } while (metodoPago !== "efectivo" && metodoPago !== "tarjeta");
-        let precioFinal = calcularPrecioFinal(carrito, metodoPago);
+        
 
         // Ordena los productos en el carrito por precio
         carrito.sort((a, b) => a.producto.precio - b.producto.precio);
@@ -116,6 +116,8 @@ function realizarCompra() {
         // Muestra los productos en el carrito y el precio total a pagar
         const productosEnCarrito = carrito.map((item) => `${item.cantidad} ${item.producto.nombre}(s) - Precio unitario: $${item.producto.precio} - Subtotal: $${item.producto.precio * item.cantidad}`);
         alert(`Productos en el carrito:\n${productosEnCarrito.join('\n')}`);
+        //Resultado final
+        let precioFinal = calcularPrecioFinal(carrito, metodoPago);
         alert(`El precio total a pagar es: $${precioFinal}. Gracias por su compra.`);
     }
 }
