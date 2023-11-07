@@ -17,57 +17,70 @@ const IVA = 1.21
 
 const carrito = [];
 
-alert("Bienvenido a la tienda de instrumentos. Comencemos con su compra. \n A continuacion nuestros productos:");
+function mostrarProductos() {
+    return productos.map((producto, index) => `${index + 1}. Nombre: ${producto.nombre} - Precio: $${producto.precio}`).join("///");
+}
 
-let continuar = true;
+function agregarAlCarrito(producto, cantidad) {
+    carrito.push({ producto, cantidad });
+}
 
-while (continuar) {
-    let mostrarProductos = productos.map((producto, index) => `${index + 1}. Nombre: ${producto.nombre} - Precio: $${producto.precio}`);
-    alert(mostrarProductos.join("///"));
+function calcularPrecioFinal(carrito, metodoPago) {
+    let precioFinal = carrito.reduce((total, item) => total + Math.ceil(item.producto.precio * item.cantidad), 0);
+    
+    if (metodoPago === "tarjeta") {
+        precioFinal *= IVA;
+    }
 
-    let cantidad = parseInt(prompt("Ingrese cantidad de instrumentos a elección. Ingrese '0' para salir"));
+    return precioFinal;
+}
 
-    if (isNaN(cantidad)) {
-        alert("Entrada no válida. Debe ingresar un número.");
-    } else if (cantidad <= 0) {
-        continuar = false;
-        alert("Puedes comprar en otra ocasión.");
-    } else {
-        let instrumento = prompt("Ingrese el instrumento que desea comprar (guitarra, piano, bateria, trompeta, tambor):");
+function realizarCompra() {
+    alert("Bienvenido a la tienda de instrumentos. Comencemos con su compra. \nA continuacion nuestros productos:");
+    let continuar = true;
 
-        const productoSeleccionado = productos.find((producto) => producto.nombre.toLowerCase() === instrumento.toLowerCase());
+    while (continuar) {
+        alert(mostrarProductos());
 
-        if (productoSeleccionado) {
-            carrito.push({ producto: productoSeleccionado, cantidad });
-            alert(`Has agregado ${cantidad} ${instrumento}(s) al carrito.`);
+        let cantidad = parseInt(prompt("Ingrese cantidad de instrumentos a elección. Ingrese '0' para salir"));
 
-            // Preguntar si desea comprar algo más
-            let respuesta = prompt("¿Desea comprar algo más? (Sí o No):").toLowerCase();
-            if (respuesta !== "si" && respuesta !== "sí") {
-                continuar = false;
-            }
+        if (isNaN(cantidad)) {
+            alert("Entrada no válida. Debe ingresar un número.");
+        } else if (cantidad <= 0) {
+            continuar = false;
+            alert("Puedes comprar en otra ocasión.");
         } else {
-            alert("Instrumento no válido.");
+            let instrumento = prompt("Ingrese el instrumento que desea comprar (guitarra, piano, bateria, trompeta, tambor):");
+
+            const productoSeleccionado = productos.find((producto) => producto.nombre.toLowerCase() === instrumento.toLowerCase());
+
+            if (productoSeleccionado) {
+                agregarAlCarrito(productoSeleccionado, cantidad);
+                alert(`Has agregado ${cantidad} ${instrumento}(s) al carrito.`);
+
+                let respuesta = prompt("¿Desea comprar algo más? (Sí o No):").toLowerCase();
+                if (respuesta !== "si" && respuesta !== "sí") {
+                    continuar = false;
+                }
+            } else {
+                alert("Instrumento no válido.");
+            }
         }
     }
-}
 
-if (carrito.length === 0) {
-    alert("No se ha agregado ningún producto al carrito. Hasta luego.");
-} else {
-    carrito.sort((a, b) => a.producto.precio - b.producto.precio);
+    if (carrito.length === 0) {
+        alert("No se ha agregado ningún producto al carrito. Hasta luego.");
+    } else {
+        let metodoPago = prompt("Ingrese el método de pago (Efectivo, Tarjeta):").toLowerCase();
+        let precioFinal = calcularPrecioFinal(carrito, metodoPago);
 
-    let precioFinal = carrito.reduce((total, item) => total + Math.ceil(item.producto.precio * item.cantidad), 0);
+        carrito.sort((a, b) => a.producto.precio - b.producto.precio);
 
-    let metodoPago = prompt("Ingrese el método de pago (Efectivo, Tarjeta):").toLowerCase();
+        const productosEnCarrito = carrito.map((item) => `${item.cantidad} ${item.producto.nombre}(s) - Precio unitario: $${item.producto.precio} - Subtotal: $${item.producto.precio * item.cantidad}`);
+        alert(`Productos en el carrito:\n${productosEnCarrito.join('\n')}`);
 
-    if (metodoPago == "tarjeta") {
-        precioFinal *= IVA
-        alert("Se agrega 21% de costo por IVA")
+        alert(`El precio total a pagar es: $${precioFinal}. Gracias por su compra. Hasta luego!`);
     }
-
-    const productosEnCarrito = carrito.map((item) => `${item.cantidad} ${item.producto.nombre}(s) - Precio unitario: $${item.producto.precio} - Subtotal: $${item.producto.precio * item.cantidad}`);
-    alert(`Productos en el carrito:\n${productosEnCarrito.join('\n')}`);
-
-    alert(`El precio total a pagar es: $${precioFinal}. Gracias por su compra. Hasta luego!`);
 }
+
+realizarCompra();
