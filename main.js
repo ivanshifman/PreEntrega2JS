@@ -1,3 +1,4 @@
+// Definición de la clase Producto
 class Producto {
     constructor(nombre, precio) {
         this.nombre = nombre;
@@ -5,6 +6,7 @@ class Producto {
     }
 }
 
+// Creación de una lista de productos
 const productos = [
     new Producto("guitarra", 999.99),
     new Producto("piano", 1999.99),
@@ -13,21 +15,26 @@ const productos = [
     new Producto("tambor", 1799.99)
 ];
 
-const IVA = 1.21
+// IVA para aplicar al pago con tarjeta
+const IVA = 1.21;
 
+// Carrito de compras donde se almacenarán los productos seleccionados
 const carrito = [];
 
+// Función para mostrar los productos y sus precios
 function mostrarProductos() {
     return productos.map((producto, index) => `${index + 1}. Nombre: ${producto.nombre} - Precio: $${producto.precio}`).join("///");
 }
 
+// Función para agregar un producto al carrito
 function agregarAlCarrito(producto, cantidad) {
     carrito.push({ producto, cantidad });
 }
 
+// Función para calcular el precio final, teniendo en cuenta el método de pago
 function calcularPrecioFinal(carrito, metodoPago) {
     let precioFinal = carrito.reduce((total, item) => total + Math.ceil(item.producto.precio * item.cantidad), 0);
-    
+
     if (metodoPago === "tarjeta") {
         precioFinal *= IVA;
     }
@@ -35,28 +42,41 @@ function calcularPrecioFinal(carrito, metodoPago) {
     return precioFinal;
 }
 
+// Función para saludar al usuario
+const saludo = () => {
+    let nombre = prompt("Ingrese su nombre: ");
+    alert(`Bienvenido ${nombre}`);
+}
+
+// Comienzo de la compra
 function realizarCompra() {
-    alert("Bienvenido a la tienda de instrumentos. Comencemos con su compra. \nA continuacion nuestros productos:");
+    // Saludo al usuario
+    saludo();
+
+    // Mensaje de bienvenida y presentación de productos
+    alert("Bienvenido a la tienda de instrumentos. Comencemos con su compra. \nA continuación nuestros productos:");
+
     let continuar = true;
 
     while (continuar) {
+        // Muestra los productos disponibles
         alert(mostrarProductos());
 
-        let cantidad = parseInt(prompt("Ingrese cantidad de instrumentos a elección. Ingrese '0' para salir"));
+        let cantidad = parseInt(prompt("Ingrese la cantidad de instrumentos a elegir. Ingrese '0' para salir"));
 
         if (isNaN(cantidad)) {
             alert("Entrada no válida. Debe ingresar un número.");
         } else if (cantidad <= 0) {
             continuar = false;
-            alert("Puedes comprar en otra ocasión.");
+            alert("Puede comprar en otra ocasión.");
         } else {
-            let instrumento = prompt("Ingrese el instrumento que desea comprar (guitarra, piano, bateria, trompeta, tambor):");
+            let instrumento = prompt("Ingrese el nombre del instrumento que desea comprar (guitarra, piano, batería, trompeta, tambor):");
 
             const productoSeleccionado = productos.find((producto) => producto.nombre.toLowerCase() === instrumento.toLowerCase());
 
             if (productoSeleccionado) {
                 agregarAlCarrito(productoSeleccionado, cantidad);
-                alert(`Has agregado ${cantidad} ${instrumento}(s) al carrito.`);
+                alert(`Ha agregado ${cantidad} ${instrumento}(s) al carrito.`);
 
                 let respuesta = prompt("¿Desea comprar algo más? (Sí o No):").toLowerCase();
                 if (respuesta !== "si" && respuesta !== "sí") {
@@ -74,13 +94,15 @@ function realizarCompra() {
         let metodoPago = prompt("Ingrese el método de pago (Efectivo, Tarjeta):").toLowerCase();
         let precioFinal = calcularPrecioFinal(carrito, metodoPago);
 
+        // Ordena los productos en el carrito por precio
         carrito.sort((a, b) => a.producto.precio - b.producto.precio);
 
+        // Muestra los productos en el carrito y el precio total a pagar
         const productosEnCarrito = carrito.map((item) => `${item.cantidad} ${item.producto.nombre}(s) - Precio unitario: $${item.producto.precio} - Subtotal: $${item.producto.precio * item.cantidad}`);
         alert(`Productos en el carrito:\n${productosEnCarrito.join('\n')}`);
-
-        alert(`El precio total a pagar es: $${precioFinal}. Gracias por su compra. Hasta luego!`);
+        alert(`El precio total a pagar es: $${precioFinal}. Gracias por su compra.`);
     }
 }
 
+// Inicia el proceso de compra llamando a la función realizarCompra
 realizarCompra();
