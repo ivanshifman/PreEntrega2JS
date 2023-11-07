@@ -23,7 +23,7 @@ const carrito = [];
 
 // Función para mostrar los productos y sus precios
 function mostrarProductos() {
-    return productos.map((producto, index) => `${index + 1}. Nombre: ${producto.nombre} - Precio: $${producto.precio}`).join("///");
+    return productos.map((producto, index) => ` ${index + 1}. Nombre: ${producto.nombre} - Precio: $${producto.precio}\n`).join("");
 }
 
 // Función para agregar un producto al carrito
@@ -37,6 +37,7 @@ function calcularPrecioFinal(carrito, metodoPago) {
 
     if (metodoPago === "tarjeta") {
         precioFinal *= IVA;
+        alert("Se agrega recargo del 21% por metodo de pago")
     }
 
     return precioFinal;
@@ -78,10 +79,18 @@ function realizarCompra() {
                 agregarAlCarrito(productoSeleccionado, cantidad);
                 alert(`Ha agregado ${cantidad} ${instrumento}(s) al carrito.`);
 
-                let respuesta = prompt("¿Desea comprar algo más? (Sí o No):").toLowerCase();
+                let respuesta;
+                // Pedir la respuesta hasta que se ingrese una válida
+                do {
+                    respuesta = prompt("¿Desea comprar algo más? (Sí o No):").toLowerCase();
+                    if (respuesta !== "si" && respuesta !== "sí" && respuesta !== "no") {
+                        alert("Respuesta no válida. Por favor, ingrese 'Sí' o 'No'.");
+                    }
+                } while (respuesta !== "si" && respuesta !== "sí" && respuesta !== "no");
                 if (respuesta !== "si" && respuesta !== "sí") {
                     continuar = false;
                 }
+
             } else {
                 alert("Instrumento no válido.");
             }
@@ -91,7 +100,14 @@ function realizarCompra() {
     if (carrito.length === 0) {
         alert("No se ha agregado ningún producto al carrito. Hasta luego.");
     } else {
-        let metodoPago = prompt("Ingrese el método de pago (Efectivo, Tarjeta):").toLowerCase();
+        let metodoPago;
+        // Pedir el método de pago hasta que se ingrese uno válido
+        do {
+            metodoPago = prompt("Ingrese el método de pago (Efectivo, Tarjeta):").toLowerCase();
+            if (metodoPago !== "efectivo" && metodoPago !== "tarjeta") {
+                alert("Método de pago no válido. Por favor, ingrese 'Efectivo' o 'Tarjeta'.");
+            }
+        } while (metodoPago !== "efectivo" && metodoPago !== "tarjeta");
         let precioFinal = calcularPrecioFinal(carrito, metodoPago);
 
         // Ordena los productos en el carrito por precio
