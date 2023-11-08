@@ -23,7 +23,7 @@ const carrito = [];
 
 // Función para mostrar los productos y sus precios
 function mostrarProductos() {
-    return productos.map((producto, index) => ` ${index + 1}. Nombre: ${producto.nombre} - Precio: $${producto.precio}\n`).join("");
+    return productos.map((producto, index) => ` ${index + 1}. Nombre: ${producto.nombre} - Precio: $${producto.precio}\n`).join('\n');
 }
 
 // Función para agregar un producto al carrito
@@ -46,16 +46,13 @@ function calcularPrecioFinal(carrito, metodoPago) {
 // Función para saludar al usuario
 const saludo = () => {
     let nombre = prompt("Ingrese su nombre: ");
-    alert(`Bienvenido ${nombre}`);
+    alert(`Bienvenido ${nombre} a la tienda de instrumentos.\nComencemos con su compra.\nA continuación nuestros productos:`);
 }
 
 // Comienzo de la compra
 function realizarCompra() {
     // Saludo al usuario
     saludo();
-
-    // Mensaje de bienvenida y presentación de productos
-    alert("Bienvenido a la tienda de instrumentos. Comencemos con su compra. \nA continuación nuestros productos:");
 
     let continuar = true;
 
@@ -71,10 +68,10 @@ function realizarCompra() {
             continuar = false;
             alert("Puede comprar en otra ocasión.");
         } else {
+            //Comienzo eleccion de productos
             let instrumento = prompt("Ingrese el nombre del instrumento que desea comprar (guitarra, piano, batería, trompeta, tambor):");
 
             const productoSeleccionado = productos.find((producto) => producto.nombre.toLowerCase() === instrumento.toLowerCase());
-
             if (productoSeleccionado) {
                 agregarAlCarrito(productoSeleccionado, cantidad);
                 alert(`Ha agregado ${cantidad} ${instrumento}(s) al carrito.`);
@@ -121,6 +118,5 @@ function realizarCompra() {
         alert(`El precio total a pagar es: $${precioFinal}. Gracias por su compra.`);
     }
 }
-
 // Inicia el proceso de compra llamando a la función realizarCompra
 realizarCompra();
